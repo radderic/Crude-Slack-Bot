@@ -24,7 +24,7 @@ def handleMessage(text, where, who):
     #calls bot directly
     if(text.startswith(identifier)):
         command = text.split(' ')[0][1:]
-        text = text.split(' ')[1]
+        text = text.split(' ', 1)[1]
         if(command == 'echo'):
             echo(text, where)
 

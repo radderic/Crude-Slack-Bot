@@ -2,23 +2,13 @@ from slackclient import SlackClient
 from time import sleep
 from pprint import pprint
 
-token = 'token goes here'
+tokenFile = open('token.txt', 'r')
+token = tokenFile.read().rstrip()
 slack_client = SlackClient(token)
-identifier = '!testbot'
+identifier = '!'
 
-def getSelfID():
-    data = slack_client.api_call('users.list', token=TOKEN)
-    for member in data['members']:
-        if(member['name'] == 'test_bot'):
-            print("id found", member['name'], member['id'])
-            return member['id']
-    return False
-
-def fromSelf(who):
-    if(getSelfID == who):
-        return True
-    else:
-        return False
+def echo(text, where):
+    sendMessage(text, where)
 
 def sendMessage(text, channel):
     slack_client.api_call(
@@ -29,21 +19,20 @@ def sendMessage(text, channel):
 
 def handleMessage(text, where, who):
     #arbitrary text
-    if(fromSelf(who) == False):
-        if(text == 'hi'):
-            sendMessage('hi', where)
-        #calls bot directly
-        if(text.startswith(identifier)):
-            print("I would do something here")
+    if(text == 'hi'):
+        sendMessage('hi', where)
+    #calls bot directly
+    if(text.startswith(identifier)):
+        command = text.split(' ')[0][1:]
+        text = text.split(' ')[1]
+        if(command == 'echo'):
+            echo(text, where)
 
 def handleEvent(event):
     if(event[0]['type'] == 'message'):
         text = event[0]['text']
         where = event[0]['channel']
-        if(event[0].contains('user')):
-            who = event[0]['user']
-            handleMessage(text, where, who)
-
+            handleMessage(text, where)
 
 if __name__ == "__main__":
     print('Attempting to connect...')

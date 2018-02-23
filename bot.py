@@ -17,7 +17,7 @@ def sendMessage(text, channel):
     text=text
     )
 
-def handleMessage(text, where, who):
+def handleMessage(text, where):
     #arbitrary text
     if(text == 'hi'):
         sendMessage('hi', where)
@@ -32,7 +32,7 @@ def handleEvent(event):
     if(event[0]['type'] == 'message'):
         text = event[0]['text']
         where = event[0]['channel']
-            handleMessage(text, where)
+        handleMessage(text, where)
 
 if __name__ == "__main__":
     print('Attempting to connect...')
